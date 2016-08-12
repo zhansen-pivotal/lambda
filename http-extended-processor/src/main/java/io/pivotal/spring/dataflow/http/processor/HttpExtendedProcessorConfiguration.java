@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,8 +24,9 @@ public class HttpExtendedProcessorConfiguration {
 	private static Logger LOG = LoggerFactory.getLogger(HttpExtendedProcessorConfiguration.class);
 
 	@Transformer(inputChannel = Processor.INPUT, outputChannel = Processor.OUTPUT)
-	public String httpGet(Object payload) throws Exception {
+	public Object httpGet(Object payload) throws Exception {
 		String line, lat, lon, jsonString, mString;
+		Map<String, Object> m = new HashMap<String, Object>();
 
 		StringBuilder result = new StringBuilder();
 		String uuid = UUID.randomUUID().toString();
@@ -50,12 +52,12 @@ public class HttpExtendedProcessorConfiguration {
 			JSONObject json = new JSONObject(result.toString());
 			jsonString = json.getJSONObject("Results").toString();
 
-			Map<String, Object> m = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {
+			m = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {
 			});
 			m.put("lat", lat);
 			m.put("lon", lon);
 			m.put("id", uuid);
-			mString = m.toString();
+			
 
 			rd.close();
 		} catch (Exception e) {
@@ -64,6 +66,6 @@ public class HttpExtendedProcessorConfiguration {
 
 		LOG.info("Returned={}", jsonString);
 
-		return mString;
+		return m;
 	}
 }
