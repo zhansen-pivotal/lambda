@@ -54,16 +54,15 @@ body {
 
 
 <script type="text/javascript"
-	src="https://maps.google.com/maps/api/js?key=AIzaSyAd4iuaNas8zs9W6qQqzBWRPc7Yt_fho60&libraries=visualization">
-	
-</script>
+	src="https://maps.google.com/maps/api/js?key=AIzaSyAd4iuaNas8zs9W6qQqzBWRPc7Yt_fho60&libraries=visualization"></script>
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
+<script
+	src="https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js"></script>
+
 <script src="timer.jquery.js"></script>
-
-
 <script src="Chart.bundle.min.js"></script>
 
 <script type="text/javascript">
@@ -155,33 +154,49 @@ body {
 	 * @param {Object} imageIcon Image to use for icon, set as nothing to use
 	 *     default icon.
 	 */
+
+	var rawData = new Array();
+	var markers = new Array();
+
+	function doInfoWindow(data) {
+		var html = "<h5>Median Income : " + data['medianIncome'] + "</h5>";
+		html += "<h5>Fips Code : " + data['blockFips'] + "</h5>";
+		html += "<h5>Population Below Poverty : "
+				+ Math.round(data['incomeBelowPoverty'] * 100) + "%" + "</h5>";
+		html += "<h5>Source : " + data['Source'] + "</h5>";
+		html += "<h5>Destination : " + data['Destination'] + "</h5>";
+		html += "<h5>Year : " + data['DataSetYear'] + "</h5>";
+
+		document.infowindow.setContent(html);
+		
+	};
+	var currentMarker = null;
+
 	function addMarkerToMap(i, lat, lng, htmlContent, imageIcon) {
 		var marker = new google.maps.Marker({
 			position : new google.maps.LatLng(lat, lng),
-			map : document.map
+		//map : document.map //this is for map adding without marker cluster
 		});
+
+		markers.push(marker); //push of markers to clustering function
 
 		if (imageIcon) {
 			marker.setIcon(imageIcon);
 		}
-
-		console.log(lat, lng);
-		
-		//if (htmlContent) {
+		//console.log(lat, lng);
 		google.maps.event.addListener(marker, 'click', (function(marker, i) {
 			return function() {
-				//document.infowindow.setContent(htmlContent);
-				//document.infowindow.open(document.map, marker);
-				
 				doQuery(lat, lng);
+				//console.log(rawData);
+				currentMarker = marker;
+				document.infowindow.open(document.map, marker);
+				
+
 			}
 		})(marker, i));
-		//}
-	}
+	};
 
 	function doQuery(lat, lon) {
-
-		var rawData;
 
 		$.ajax({
 			url : 'http://127.0.0.1:8080/getByLatLon?lat=' + lat + '&lon='
@@ -195,6 +210,8 @@ body {
 				if (typeof reqData != 'undefined') {
 					//console.log(reqData[0]);
 					doChart(reqData);
+					doInfoWindow(reqData[0]);
+					//rawData = $.extend(true, [], reqData);
 				} else {
 					console.log("No data");
 				}
@@ -281,12 +298,17 @@ body {
 		});
 
 	};
+	var markerClusterer = null;
+	function cluster() {
+		var options = {
+			imagePath : 'images/m'
+		};
+		//console.log(markers);
+		markerClusterer = new MarkerClusterer(document.map, markers, options);
+	};
 
 	//function updateMap(data, mode) { 
 	function updateMap() {
-		//console.log("updateHeatmap()");
-		//console.log(newData);
-
 		$.ajax({
 			url : 'http://127.0.0.1:8080/initMap',
 			type : 'GET',
@@ -297,15 +319,9 @@ body {
 				//console.log(status);
 				if (typeof reqData != 'undefined') {
 					$.each(reqData, function(id, coords) {
-						//console.log(id, coords);
-
-						//var html = "<h5>Median Income</h5><p>"
-						//		+ metrics.Results.medianIncome + "</p><div>";
-
-						//console.log(normalizedValue);
 						addMarkerToMap(id, coords.lat, coords.lon);
-						//});
 					});
+					cluster();
 				} else {
 					console.log("No data");
 				}
@@ -316,19 +332,6 @@ body {
 		});
 
 	};
-
-	
-
-	/*
-	// start a timer & execute a function every 1 second
-	$('#timer').timer({
-		duration : '1s',
-		callback : updateMap,
-
-		// repeatedly calls the callback you specify
-		repeat : false
-	});
-	*/
 </script>
 
 <body onload="initialize();updateMap();">
@@ -343,6 +346,22 @@ body {
 	<div id="pchart" style="width: 20%;">
 		<canvas id="pchart_canvas" width="20" height="15"></canvas>
 	</div>
+
+	<script type="text/javascript">
+		// start a timer & execute a function every 1 second
+		$('#timer').timer({
+			duration : '2s',
+			callback : function() {
+				markers = [];
+				markerClusterer.clearMarkers();
+				updateMap();
+				document.infowindow.open(document.map, currentMarker);
+
+			},
+
+			repeat : true
+		});
+	</script>
 
 </body>
 </html>

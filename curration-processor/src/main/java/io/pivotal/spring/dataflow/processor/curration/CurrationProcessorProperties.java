@@ -11,6 +11,12 @@ public class CurrationProcessorProperties {
 
 	@Value("${destination:unknown}")
 	public String destination;
+	
+	@Value("${securityGroup:unknown}")
+	public String securityGroup;
+	
+	@Value("${dataSetYear:unknown}")
+	public String dataSetYear;
 
 	public String getDataSource() {
 		return dataSource;
@@ -26,5 +32,21 @@ public class CurrationProcessorProperties {
 
 	public void setDestination(String destination) {
 		this.destination = destination;
+	}
+
+	public String getSecurityGroup() {
+		return securityGroup;
+	}
+
+	public void setSecurityGroup(String securityGroup) {
+		this.securityGroup = securityGroup;
+	}
+
+	public String getDataSetYear() {
+		return dataSetYear;
+	}
+
+	public void setDataSetYear(String dataSetYear) {
+		this.dataSetYear = dataSetYear;
 	}
 }

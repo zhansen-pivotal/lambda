@@ -29,11 +29,11 @@ public class CurrationProcessorConfiguration {
 	@Transformer(inputChannel = Processor.INPUT, outputChannel = Processor.OUTPUT)
 	public String cleanData(Object payload) throws Exception {
 		//String d = payload.toString();
-		LOG.info("Payload = {} , Payload class={}", payload.toString() , payload.getClass());
+		LOG.debug("Payload = {} , Payload class={}", payload.toString() , payload.getClass());
 		
 		@SuppressWarnings("rawtypes")
 		Map json = (Map) payload;
-		LOG.info("JSONObject = {}", json);
+		LOG.debug("JSONObject = {}", json);
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		Date date = Calendar.getInstance().getTime();
@@ -44,6 +44,8 @@ public class CurrationProcessorConfiguration {
 		json.put("Date", sDate);
 		json.put("Source", this.props.getDataSource());
 		json.put("Destination", this.props.getDestination());
+		json.put("Group", this.props.getSecurityGroup());
+		json.put("DataSetYear", this.props.getDataSetYear());
 		
 		
 		

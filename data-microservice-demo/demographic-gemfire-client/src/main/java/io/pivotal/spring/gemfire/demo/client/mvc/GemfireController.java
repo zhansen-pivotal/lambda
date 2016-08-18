@@ -28,7 +28,7 @@ public class GemfireController {
 
 	@RequestMapping(value = "/initMap")
 	public @ResponseBody String initMap() throws Exception {
-		LOG.info("Building Map of Lats and Lons...");
+		LOG.debug("Building Map of Lats and Lons...");
 
 		String queryString = "SELECT e.value.lat, e.value.lon from /demo.entrySet e";
 		JSONArray latsAndLons = new JSONArray();
@@ -85,15 +85,18 @@ public class GemfireController {
 	public @ResponseBody String queryData(String lat, String lon) throws Exception {
 
 		JSONArray ret = new JSONArray();
-		String queryString = "SELECT e.value FROM /demo.entrySet e WHERE e.value.lat = " + lat + " AND e.value.lon ="
-				+ lon;
+		String queryString = "SELECT e.value FROM /demo.entrySet e WHERE e.value.lat = $1 AND e.value.lon = $2";
 
 		LOG.info("QueryParams: lat={}, lon={}", lat, lon);
+		
+		Object[] params = new Object[2];
+		params[0] = lat;
+		params[1] = lon;
 
 		QueryService queryService = cache.getQueryService();
 		Query query = queryService.newQuery(queryString);
 
-		SelectResults results = (SelectResults) query.execute();
+		SelectResults results = (SelectResults) query.execute(params);
 
 		if (results.isEmpty()) {
 			LOG.error("Query Result is Empty");
