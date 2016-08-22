@@ -1,0 +1,14 @@
+
+[info 2016/08/18 16:19:02.476 MDT <main> tid=0x1] Log opened with new distributed system connection.  View(creator=Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, viewId=0, [Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442])
+
+[info 2016/08/18 16:20:57.262 MDT <DM-MemberEventInvoker> tid=0x1a] A new member joined: Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131.  View(creator=Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, viewId=1, [Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131])
+
+[info 2016/08/18 16:20:58.855 MDT <Pooled High Priority Message Processor 1> tid=0x5a] server summary: 1 cache servers with 0 client connections/current cache servers : Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131 
+
+[info 2016/08/18 16:21:06.933 MDT <DM-MemberEventInvoker> tid=0x1a] A new member joined: Zachary-Hansen-MacBook-pro(server2-Zachary-Hansen-MacBook-pro.local:6467)<v2>:10762.  View(creator=Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, viewId=2, [Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131, Zachary-Hansen-MacBook-pro(server2-Zachary-Hansen-MacBook-pro.local:6467)<v2>:10762])
+
+[info 2016/08/18 16:21:08.642 MDT <Pooled High Priority Message Processor 1> tid=0x5a] server summary: 2 cache servers with 0 client connections/current cache servers : Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131 Zachary-Hansen-MacBook-pro(server2-Zachary-Hansen-MacBook-pro.local:6467)<v2>:10762 
+
+[info 2016/08/18 16:21:16.659 MDT <DM-MemberEventInvoker> tid=0x1a] A new member joined: Zachary-Hansen-MacBook-pro(server3-Zachary-Hansen-MacBook-pro.local:6493)<v3>:43657.  View(creator=Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, viewId=3, [Zachary-Hansen-MacBook-pro(loc-Zachary-Hansen-MacBook-pro.local:6407:locator)<v0>:10442, Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131, Zachary-Hansen-MacBook-pro(server2-Zachary-Hansen-MacBook-pro.local:6467)<v2>:10762, Zachary-Hansen-MacBook-pro(server3-Zachary-Hansen-MacBook-pro.local:6493)<v3>:43657])
+
+[info 2016/08/18 16:21:18.298 MDT <Pooled High Priority Message Processor 2> tid=0x66] server summary: 3 cache servers with 0 client connections/current cache servers : Zachary-Hansen-MacBook-pro(server-Zachary-Hansen-MacBook-pro.local:6441)<v1>:49131 Zachary-Hansen-MacBook-pro(server2-Zachary-Hansen-MacBook-pro.local:6467)<v2>:10762 Zachary-Hansen-MacBook-pro(server3-Zachary-Hansen-MacBook-pro.local:6493)<v3>:43657 
