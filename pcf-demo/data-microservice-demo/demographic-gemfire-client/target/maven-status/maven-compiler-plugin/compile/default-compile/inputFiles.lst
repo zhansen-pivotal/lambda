@@ -1,0 +1,6 @@
+/Users/zhansen/tmp/client-group/corelogic/demos/data-microservice-demo/demographic-gemfire-client/src/main/java/io/pivotal/spring/gemfire/demo/client/mvc/GemfireController.java
+/Users/zhansen/tmp/client-group/corelogic/demos/data-microservice-demo/demographic-gemfire-client/src/main/java/io/pivotal/spring/gemfire/demo/client/config/PropertyConfig.java
+/Users/zhansen/tmp/client-group/corelogic/demos/data-microservice-demo/demographic-gemfire-client/src/main/java/io/pivotal/spring/gemfire/demo/client/config/CacheConfig.java
+/Users/zhansen/tmp/client-group/corelogic/demos/data-microservice-demo/demographic-gemfire-client/src/main/java/io/pivotal/spring/gemfire/demo/client/config/RegionConfig.java
+/Users/zhansen/tmp/client-group/corelogic/demos/data-microservice-demo/demographic-gemfire-client/src/main/java/io/pivotal/spring/gemfire/demo/client/DemographicGemfireClientApplication.java
+/Users/zhansen/tmp/client-group/corelogic/demos/data-microservice-demo/demographic-gemfire-client/src/main/java/io/pivotal/spring/gemfire/demo/client/config/SimpleCORSFilter.java

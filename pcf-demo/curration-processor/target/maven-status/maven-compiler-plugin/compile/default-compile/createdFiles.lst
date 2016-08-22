@@ -1,0 +1,4 @@
+META-INF/spring-configuration-metadata.json
+io/pivotal/spring/dataflow/processor/curration/CurrationProcessorProperties.class
+io/pivotal/spring/dataflow/processor/curration/CurrationProcessorApplication.class
+io/pivotal/spring/dataflow/processor/curration/CurrationProcessorConfiguration.class

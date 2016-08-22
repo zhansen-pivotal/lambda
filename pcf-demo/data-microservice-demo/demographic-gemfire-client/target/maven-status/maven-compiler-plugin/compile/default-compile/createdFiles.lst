@@ -1,0 +1,6 @@
+io/pivotal/spring/gemfire/demo/client/DemographicGemfireClientApplication.class
+io/pivotal/spring/gemfire/demo/client/config/CacheConfig.class
+io/pivotal/spring/gemfire/demo/client/mvc/GemfireController.class
+io/pivotal/spring/gemfire/demo/client/config/RegionConfig.class
+io/pivotal/spring/gemfire/demo/client/config/PropertyConfig.class
+io/pivotal/spring/gemfire/demo/client/config/SimpleCORSFilter.class
