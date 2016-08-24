@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.Bean;
@@ -21,14 +20,11 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 
-@EnableConfigurationProperties(S3BufferProperties.class)
 @EnableBinding(Processor.class)
 public class S3BufferConfiguration {
 	private static Logger LOG = LoggerFactory.getLogger(S3BufferConfiguration.class);
 
 	private MessageChannel output;
-	@Autowired
-	S3BufferProperties property;
 	
 	@Autowired
 	public void SendingBean(MessageChannel output) {
@@ -42,7 +38,7 @@ public class S3BufferConfiguration {
 		AggregatorFactoryBean aggregatorFactoryBean = new AggregatorFactoryBean();
 		aggregatorFactoryBean
 				.setCorrelationStrategy(new ExpressionEvaluatingCorrelationStrategy("payload.getClass().name"));
-		aggregatorFactoryBean.setReleaseStrategy(new MessageCountReleaseStrategy(property.getAggSize()));
+		aggregatorFactoryBean.setReleaseStrategy(new MessageCountReleaseStrategy(100));
 		aggregatorFactoryBean.setMessageStore(messageGroupStore);
 		aggregatorFactoryBean.setProcessorBean(new DefaultAggregatingMessageGroupProcessor());
 		aggregatorFactoryBean.setExpireGroupsUponCompletion(true);
