@@ -64,10 +64,10 @@ public class S3BufferConfiguration {
 
 	@Bean
 	@ServiceActivator(inputChannel = "toSink")
-	public MessageHandler datasetSinkMessageHandler() {
-		return new MessageHandler() {
-
-			@Override
+//	public MessageHandler datasetSinkMessageHandler() {
+//		return new MessageHandler() {
+//
+//			@Override
 			public void handleMessage(Message<?> message) throws MessagingException {
 				Object payload = message.getPayload();
 				if (payload instanceof Collection<?>) {
@@ -81,9 +81,9 @@ public class S3BufferConfiguration {
 							"Expected a collection of POJOs but received " + message.getPayload().getClass().getName());
 				}
 			}
-		};
+		//}
 
-	}
+	//}
 
 	@Bean
 	MessageGroupStore messageGroupStore() {
