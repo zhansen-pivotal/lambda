@@ -1,11 +1,15 @@
 package io.pivotal.spring.dataflow.processor.s3.buffer;
 
 import java.util.Collection;
+
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.binding.InputBindingLifecycle;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -13,27 +17,36 @@ import org.springframework.integration.aggregator.DefaultAggregatingMessageGroup
 import org.springframework.integration.aggregator.ExpressionEvaluatingCorrelationStrategy;
 import org.springframework.integration.aggregator.MessageCountReleaseStrategy;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.AggregatorFactoryBean;
 import org.springframework.integration.store.MessageGroupStore;
+import org.springframework.integration.store.MessageGroupStoreReaper;
+import org.springframework.integration.store.SimpleMessageStore;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @EnableBinding(Processor.class)
 public class S3BufferConfiguration {
 	private static Logger LOG = LoggerFactory.getLogger(S3BufferConfiguration.class);
 
-	private MessageChannel output;
+	@Bean
+	public MessageChannel toSink() {
+		return new DirectChannel();
+	}
 	
+	private MessageChannel output;
+
 	@Autowired
 	public void SendingBean(MessageChannel output) {
 		this.output = output;
 	}
 
 	@Bean
-    @Primary
-    @ServiceActivator(inputChannel= Processor.INPUT)
+	@Primary
+	@ServiceActivator(inputChannel = Processor.INPUT)
 	FactoryBean<MessageHandler> aggregatorFactoryBean(MessageChannel toSink, MessageGroupStore messageGroupStore) {
 		AggregatorFactoryBean aggregatorFactoryBean = new AggregatorFactoryBean();
 		aggregatorFactoryBean
@@ -47,8 +60,8 @@ public class S3BufferConfiguration {
 		return aggregatorFactoryBean;
 	}
 
-    @Bean
-    @ServiceActivator(inputChannel = "toSink")
+	@Bean
+	@ServiceActivator(inputChannel = "toSink")
 	public MessageHandler datasetSinkMessageHandler() {
 		return new MessageHandler() {
 
@@ -67,5 +80,47 @@ public class S3BufferConfiguration {
 				}
 			}
 		};
+
+	}
+
+	@Bean
+	MessageGroupStore messageGroupStore() {
+		SimpleMessageStore messageGroupStore = new SimpleMessageStore();
+		messageGroupStore.setTimeoutOnIdle(true);
+		messageGroupStore.setCopyOnGet(false);
+		return messageGroupStore;
+	}
+
+	@Bean
+	MessageGroupStoreReaper messageGroupStoreReaper(MessageGroupStore messageStore,
+			InputBindingLifecycle inputBindingLifecycle) {
+		MessageGroupStoreReaper messageGroupStoreReaper = new MessageGroupStoreReaper(messageStore);
+		messageGroupStoreReaper.setPhase(inputBindingLifecycle.getPhase() - 1);
+		// messageGroupStoreReaper.setTimeout(properties.getIdleTimeout());
+		messageGroupStoreReaper.setAutoStartup(true);
+		messageGroupStoreReaper.setExpireOnDestroy(true);
+		return messageGroupStoreReaper;
+	}
+
+	@Bean
+	ReaperTask reaperTask() {
+		return new ReaperTask();
+	}
+
+	public static class ReaperTask {
+
+		@Autowired
+		MessageGroupStoreReaper messageGroupStoreReaper;
+
+		@Scheduled(fixedRate = 1000)
+		public void reap() {
+			messageGroupStoreReaper.run();
+		}
+
+		@PreDestroy
+		public void beforeDestroy() {
+			reap();
+		}
+
 	}
 }

@@ -1,3 +1,4 @@
 io/pivotal/spring/dataflow/processor/s3/buffer/S3BufferConfiguration$1.class
+io/pivotal/spring/dataflow/processor/s3/buffer/S3BufferConfiguration$ReaperTask.class
 io/pivotal/spring/dataflow/processor/s3/buffer/S3BufferApplication.class
 io/pivotal/spring/dataflow/processor/s3/buffer/S3BufferConfiguration.class
