@@ -48,15 +48,17 @@ public class S3BufferConfiguration {
 	@Primary
 	@ServiceActivator(inputChannel = Processor.INPUT)
 	FactoryBean<MessageHandler> aggregatorFactoryBean(MessageChannel toSink, MessageGroupStore messageGroupStore) {
+		LOG.info("Starting Aggregator");
 		AggregatorFactoryBean aggregatorFactoryBean = new AggregatorFactoryBean();
 		aggregatorFactoryBean
 				.setCorrelationStrategy(new ExpressionEvaluatingCorrelationStrategy("payload.getClass().name"));
-		aggregatorFactoryBean.setReleaseStrategy(new MessageCountReleaseStrategy(100));
+		aggregatorFactoryBean.setReleaseStrategy(new MessageCountReleaseStrategy(10));
 		aggregatorFactoryBean.setMessageStore(messageGroupStore);
 		aggregatorFactoryBean.setProcessorBean(new DefaultAggregatingMessageGroupProcessor());
 		aggregatorFactoryBean.setExpireGroupsUponCompletion(true);
 		aggregatorFactoryBean.setSendPartialResultOnExpiry(true);
 		aggregatorFactoryBean.setOutputChannel(toSink);
+		LOG.info("Aggregator about to return aggreFactoryBean");
 		return aggregatorFactoryBean;
 	}
 
