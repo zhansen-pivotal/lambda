@@ -67,7 +67,7 @@ public class S3BufferConfiguration {
 //	public MessageHandler datasetSinkMessageHandler() {
 //		return new MessageHandler() {
 //
-//			@Override
+
 			public void handleMessage(Message<?> message) throws MessagingException {
 				Object payload = message.getPayload();
 				if (payload instanceof Collection<?>) {
