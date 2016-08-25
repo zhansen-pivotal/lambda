@@ -70,7 +70,7 @@ public class S3BufferConfiguration {
 				Object payload = message.getPayload();
 				if (payload instanceof Collection<?>) {
 					Collection<?> payloads = (Collection<?>) payload;
-					LOG.debug("Writing a collection of {} POJOs" + payloads.size());
+					LOG.info("Writing a collection of {} POJOs" + " " + payload.toString() + payloads.size());
 					output.send((Message<?>) message.getPayload());
 				} else {
 					// This should never happen since message handler is fronted
