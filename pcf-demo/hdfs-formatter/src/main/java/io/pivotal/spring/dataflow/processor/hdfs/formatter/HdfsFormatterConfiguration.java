@@ -23,7 +23,7 @@ public class HdfsFormatterConfiguration {
 				+ jObj.get("id") + "," + jObj.get("Date") + "," + jObj.get("lon") + "," + jObj.get("lat") + ","
 				+ jObj.get("incomeBetween100to200") + "," + jObj.get("incomeLessThan25") + ","
 				+ jObj.get("incomeBetween25to50") + "," + jObj.get("incomeBetween50to100") + ","
-				+ jObj.get("medianIncome");
+				+ jObj.get("medianIncome") + "\n";
 	
 		LOG.debug("Transformed Payload as CSV = {}", jsonAsCsv);
 
