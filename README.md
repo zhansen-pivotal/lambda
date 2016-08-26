@@ -17,10 +17,13 @@
          * **Gemfire** (Sink)
            * Current data is cached in Gemfire to be consumed by the Demographic Data Browser UI
          * **HDFS** (Sink)
-           * Historical and Current data is stored in HDFS to be consumed by Pivotal HDB for BI/Analyic use cases. 
+           * Historical and Current data is stored in HDFS to be consumed by Pivotal HDB for BI/Analytic use cases. 
        
     
   * A working demo for viewing is available and deployed via Pivotal Web Services and Amazon Web Services. 
+    * For this demo, the following achitecture was used: 
+    
+
     * The Data Browser UI is available at:
        
        http://ec2-54-218-91-184.us-west-2.compute.amazonaws.com:8080/app.html
