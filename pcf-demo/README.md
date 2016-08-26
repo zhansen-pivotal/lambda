@@ -81,4 +81,5 @@ demo-merge=:s3-topic > s3 --bucket='<your-bucket>' --acl=PublicRead --cloud.aws.
        
        * Configuration parameters will need to be set for aws credentials and bucket.
        * An example of what the Spring Dataflow Dashboad will look like is as follows:
-          ![Screenshot] (asdf.png)
+       
+          ![Screenshot] (../Screen Shot 2016-08-26 at 3.47.15 PM.png)
