@@ -33,11 +33,77 @@
       
       ![Screenshot](Screen Shot 2016-08-26 at 11.30.28 AM.png)
       
-      * Within this stream, the major player is the curration processor. This allows for data to be enriched on its journy to Gemfire. For the demo a security group, date, source info, and destination info are added. Another use of this filter/transform layer of pipelining is to build a data subset to be cached in GemFire. GemFire should not cache large historical data that would normally be destined for HDFS or GPDB type system.
+      * Within this stream, the major player is the curration processor. This allows for data to be enriched on its journy to Gemfire. For the demo a security group, date, source info, and destination info are added. Another use of this filter/transform layer of pipelining is to build a data subset to be cached in GemFire. GemFire should not cache large historical data that would normally be destined for Hadoop or Greenplum type system.
       
       * It is then served as a Spring Boot app that queries Gemfire for current Demographic data. The data points are aggregated on the google map api and can be zoomed in by clicking in the area you want to browse. This fast access layer showcases the power of GemFire.
   * For historical data, a small sample has been stored using the historical pipeline: 
-      ![Screenshot] ()
+  
+      ![Screenshot] (Screen Shot 2016-08-26 at 2.33.48 PM.png)
+  
+      * To view this data in the working demo example, **Download** the single-node Greenplum VM from Pivotal Network. 
+ 
+               https://network.pivotal.io/products/pivotal-gpdb#/releases/2146/file_groups/465 
+       * Once downloaded, follow install instructions and start psql client. 
+      
+                   ```$ psql```
+
+         * We now need to create and configure an External Table to query from s3. 
+          * This is made possible by creating a PROTOCOL and Function and then pointing the table to the url of the s3 bucket.
+          
+          ```
+          $ sudo mkdir -p /home/gpadmin/s3
+          
+          $ vi /home/gpadmin/s3/s3.conf
+          ```
+          * Add the s3 Configuration file
+          ```
+          [default]
+          secret = "your aws secret"
+          accessid = "your aws accessid"
+          connections = 1
+          chunksize = 67108864
+          ```
+          
+          ```
+          psql> CREATE OR REPLACE FUNCTION read_from_s3() RETURNS integer AS 
+             '$libdir/gps3ext.so', 
+             's3_import'
+          LANGUAGE C STABLE;
+          
+          psql>CREATE PROTOCOL s3 (readfunc = read_from_s3);
+          ```
+          
+          * Then we give a table definition:
+          
+          ```
+          psql> CREATE EXTERNAL TABLE demographics_ext (
+            year text,
+            securityGroup text,
+            destination text,
+            fipsCode text,
+            source text,  
+            id text,
+            date text,
+            lon float,
+            lat float, 
+            incomeBetween100to200 float, 
+            incomeLessThan25 float,
+            incomeBetween25to50 float,
+            incomeBetween50to100 float,
+            medianIncome float) 
+          LOCATION ('s3://s3-us-west-2.amazonaws.com/scdf-bucket-test/1 config=/home/gpadmin/s3/s3.conf') 
+          
+          FORMAT 'TEXT' (DELIMITER ',') LOG ERRORS INTO demographics_err SEGMENT REJECT LIMIT 100;
+          ```
+          
+          * Now we can query for data. 
+          
+          ```psql> select count(*) from demographics_ext; ```
+          
+          ```psql> select * from demographics_ext limit 10```
+          
+          
+
   
 ## PCF Cli
  * To create a Data Manufacturing Pipeline in Pivotal Cloud Foundry requires the use of the cloud foundry command line tool.
