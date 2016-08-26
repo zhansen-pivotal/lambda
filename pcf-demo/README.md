@@ -1,6 +1,24 @@
 ## Build Your Own
  * If you would like to build your own version of this using Pivotal Cloudfoundry, the following steps may be taken. 
 
+## GemFire on AWS
+ * Create a 6gb ram capacity instance on AWS. 
+ * Clone the repository for demographic-demo. 
+ * In the scripts directory, there will be a gem-locator.sh and startServers.sh 
+   * vi the startServers.sh file and change to your AWS internal ip
+   
+          ```$ ./gem-locator.sh <host-ip>```
+
+          ```$ ./startServers.sh```
+
+  * Now that Gemfire is started login to gfsh
+     
+      ```
+      $ gfsh
+      gfsh> connect --locator=<host>[10334]
+      gfsh> create region --name=demo --type=PARTITION
+      ```
+
 ## PCF Cli
  * To create a Data Manufacturing Pipeline in Pivotal Cloud Foundry requires the use of the cloud foundry command line tool.
   * This can be downloaded for your platform at https://github.com/cloudfoundry/cli/releases
@@ -79,7 +97,23 @@ demo-merge=:s3-topic > s3 --bucket='<your-bucket>' --acl=PublicRead --cloud.aws.
        ```
        
        
-       * Configuration parameters will need to be set for aws credentials and bucket.
+       * Configuration parameters will need to be set for aws credentials/bucket and Gemfire server host and port.
        * An example of what the Spring Dataflow Dashboad will look like is as follows:
        
           ![Screenshot] (../Screen Shot 2016-08-26 at 3.47.15 PM.png)
+          
+          * Now we can click create and deploy the streams.
+          
+ ## Start Data Movement
+   * This data manufacturing pipeline uses http as its source. We can now post our URLs via a file using curl. 
+   * To do this, go to the data directory and find the years 2014 (being current). We can now post these data files to the Cloudfoundry http instances of the stream branches we desire. 
+   * For Example: 
+     * If we want to use 2014 and post current data to gemfire, we only need to post to the http app associated with it. (**note:** Should be scripted in future itteration)
+     
+      ```for l in `cat 2014demo-4ksample.txt`; do curl -XPOST -H "Content-Type:text/plain"  -d $l http://<your-app-route>; done;```
+     
+     * We can then continue the process for 2012 and 2010 datasets. 
+     * 2014 will be written to GemFire and S3
+     * 2012,2010 will be written to S3. 
+            
+                   **(see first README.md for S3 GPDB information)**
