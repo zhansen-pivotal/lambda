@@ -2,10 +2,15 @@
  * If you would like to build your own version of this using Pivotal Cloudfoundry, the following steps may be taken. 
 
 ## GemFire on AWS
- * Create a 6gb ram capacity instance on AWS. 
+ * Create a rhel 7 instance on AWS. 
+ * Download and Install Gemfire from pivotal network. 
+   * https://network.pivotal.io/products/pivotal-gemfire#/releases/1753/file_groups/429
+   * ```sudo rpm -ivh <pivotal-gemfire.rpm>```
+   
  * Clone the repository for demographic-demo. 
  * In the scripts directory, there will be a gem-locator.sh and startServers.sh 
    * vi the startServers.sh file and change to your AWS internal ip
+   * Now run the provided gemfire start scripts
    
           ```$ ./gem-locator.sh <host-ip>```
 
@@ -79,12 +84,12 @@
 
    * We can now start to deploy streams. To do so you can either use the dataflow-shell or the web-ui. 
 
-      *  For using the easy-use Spring Cloud Dataflow Dashboard go to:
+      *  For easy-use Spring Cloud Dataflow Dashboard go to:
              
              ```http://<your-dataflow-server>/dashboard ```
              
       *  Go to the streams tab and then stream create. 
-      *  We will need to enter our stream deffinition here. 
+      *  We will need to enter our stream definition here. 
    * The streams we need for this demo are:
        
        ```
@@ -97,7 +102,7 @@ demo-merge=:s3-topic > s3 --bucket='<your-bucket>' --acl=PublicRead --cloud.aws.
        ```
        
        
-       * Configuration parameters will need to be set for aws credentials/bucket and Gemfire server host and port.
+       * Configuration parameters will need to be set for AWS credentials/bucket and Gemfire server host and port.
        * An example of what the Spring Dataflow Dashboad will look like is as follows:
        
           ![Screenshot] (../Screen Shot 2016-08-26 at 3.47.15 PM.png)
@@ -107,7 +112,7 @@ demo-merge=:s3-topic > s3 --bucket='<your-bucket>' --acl=PublicRead --cloud.aws.
  ## Start Data Movement
    * This data manufacturing pipeline uses http as its source. We can now post our URLs via a file using curl. 
    * To do this, go to the data directory and find the years 2014 (being current). We can now post these data files to the Cloudfoundry http instances of the stream branches we desire. 
-   * For Example: 
+   * For Example:
      * If we want to use 2014 and post current data to gemfire, we only need to post to the http app associated with it. (**note:** Should be scripted in future itteration)
      
       ```for l in `cat 2014demo-4ksample.txt`; do curl -XPOST -H "Content-Type:text/plain"  -d $l http://<your-app-route>; done;```
