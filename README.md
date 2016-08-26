@@ -1,7 +1,7 @@
 # Demographic Data Manufacturing Demo
-  * This demo is a sample of a Data Manufacturing Pipeline that takes in a variety of different data with different formats and different destinations. The key here is to showcase reusible code that will allow for muliple processing features on data in motion. 
+  * This demo is a sample of a Data Manufacturing Pipeline that takes in a variety of different data with different formats and different destinations. The key here is to showcase reusable code that will allow for multiple processing features on data in motion. 
   * In order to achieve this, Spring Cloud Stream microservices deployed to Cloud Foundry via Spring Cloud Dataflow was used. 
-  * In a Data Manufacturing Pipeline, it is feasable that a variety of data will pass through this process. It is not, however, feasable to assume that all data should go to the same destination. A paradigm shift from an A to B load to a Data Microservice is needed. Namely that data purpose, data relevence, and its value to business should dictate its location. A Data Microservice platform, not unlike a standard Microservice platform, maps data to product in a way that will handle it best for the business. This also means that data product is irrelevent in the overall vision of the platform and can be changed will very little itteration. 
+  * In a Data Manufacturing Pipeline, it is feasible that a variety of data will pass through this process. It is not, however, feasible to assume that all data should go to the same destination. A paradigm shift from an A to B load to a Data Microservice is needed. Namely that data purpose, data relevance, and its value to business should dictate its location. A Data Microservice platform, not unlike a standard Microservice platform, maps data to product in a way that will handle it best for the business. This also means that data product is irrelevant in the overall vision of the platform and can be changed will very little iteration. 
   * What follows is an example of such a platform.
   
        ![Screenshot] (Screen Shot 2016-08-26 at 1.42.04 PM.png)
@@ -23,7 +23,7 @@
        
     
   * A working demo for viewing is available and deployed via Pivotal Web Services and Amazon Web Services. 
-    * For this demo, the following achitecture was used: 
+    * For this demo, the following architecture was used: 
     
       ![Screenshot](Screen Shot 2016-08-26 at 2.28.00 PM.png)
 
@@ -35,7 +35,7 @@
       
       ![Screenshot](Screen Shot 2016-08-26 at 11.30.28 AM.png)
       
-      * Within this stream, the major player is the curration processor. This allows for data to be enriched on its journy to Gemfire. For the demo a security group, date, source info, and destination info are added. Another use of this filter/transform layer of pipelining is to build a data subset to be cached in GemFire. GemFire should not cache large historical data that would normally be destined for Hadoop or Greenplum type system.
+      * Within this stream, the major player is the curration processor. This allows for data to be enriched on its journey to Gemfire. For the demo a security group, date, source info, and destination info are added. Another use of this filter/transform layer of pipelining is to build a data subset to be cached in GemFire. GemFire should not cache large historical data that would normally be destined for Hadoop or Greenplum type system.
       
       * It is then served as a Spring Boot app that queries Gemfire for current Demographic data. The data points are aggregated on the google map api and can be zoomed in by clicking in the area you want to browse. This fast access layer showcases the power of GemFire.
   * For historical data, a small sample has been stored using the historical pipeline: 
