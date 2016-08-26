@@ -23,6 +23,7 @@
   * A working demo for viewing is available and deployed via Pivotal Web Services and Amazon Web Services. 
     * For this demo, the following achitecture was used: 
     
+      ![Screenshot](Screen Shot 2016-08-26 at 2.28.00 PM.png)
 
     * The Data Browser UI is available at:
        
@@ -35,7 +36,8 @@
       * Within this stream, the major player is the curration processor. This allows for data to be enriched on its journy to Gemfire. For the demo a security group, date, source info, and destination info are added. Another use of this filter/transform layer of pipelining is to build a data subset to be cached in GemFire. GemFire should not cache large historical data that would normally be destined for HDFS or GPDB type system.
       
       * It is then served as a Spring Boot app that queries Gemfire for current Demographic data. The data points are aggregated on the google map api and can be zoomed in by clicking in the area you want to browse. This fast access layer showcases the power of GemFire.
-  * 
+  * For historical data, a small sample has been stored using the historical pipeline: 
+      ![Screenshot] ()
   
 ## PCF Cli
  * To create a Data Manufacturing Pipeline in Pivotal Cloud Foundry requires the use of the cloud foundry command line tool.
