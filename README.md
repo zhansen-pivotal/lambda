@@ -1,9 +1,25 @@
 # Demographic Data Manufacturing Demo
   * This demo is a sample of a Data Manufacturing Pipeline that takes in a variety of different data with different formats and different destinations. The key here is to showcase reusible code that will allow for muliple processing features on data in motion. 
   * In order to achieve this, Spring Cloud Stream microservices deployed to Cloud Foundry via Spring Cloud Dataflow was used. 
-  * In a Data Manufacturing Pipeline, it is feasable that a variety of data will pass through this process. It is not, however, feasable to assume that all data should go to the same destination. I paradime shift from an A to B load to a Data Microservice is needed. Namely that data purpose, data relevence, and its value to business should dictate its location. A Data Microservice platform, not unlike a standard Microservice platform, maps data to product in a way that will handle it best for the business. This also means that data product is irrelevent in the overall vision of the platform and can be changed will very little itteration. 
+  * In a Data Manufacturing Pipeline, it is feasable that a variety of data will pass through this process. It is not, however, feasable to assume that all data should go to the same destination. A paradigm shift from an A to B load to a Data Microservice is needed. Namely that data purpose, data relevence, and its value to business should dictate its location. A Data Microservice platform, not unlike a standard Microservice platform, maps data to product in a way that will handle it best for the business. This also means that data product is irrelevent in the overall vision of the platform and can be changed will very little itteration. 
   * What follows is an example of such a platform.
   
+       ![Screenshot] (Screen Shot 2016-08-26 at 1.42.04 PM.png)
+
+    * In this **Example**, the process:
+       * **File** (Source) --> 
+         * **URLs** which then gets bound by RabbitMq message bus and sent down the pipeline.
+       * **Http-Get** (Processor) -->
+         * Gets the data via a rest api and sends it to the output channel of the message bus to be consumed by currator.
+       * **Currator-Processor** (Processor) -->
+         * Enriches json data based on stream definition input params. This can differ based on destination (sink)
+       * **Gemfire** or **HDFS** (Sink) -->X
+         * **Gemfire** (Sink)
+           * Current data is cached in Gemfire to be consumed by the Demographic Data Browser UI
+         * **HDFS** (Sink)
+           * Historical and Current data is stored in HDFS to be consumed by Pivotal HDB for BI/Analyic use cases. 
+       
+    
   * A working demo for viewing is available and deployed via Pivotal Web Services and Amazon Web Services. 
     * The Data Browser UI is available at:
        
