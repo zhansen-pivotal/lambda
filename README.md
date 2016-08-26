@@ -3,7 +3,7 @@
   * In order to achieve this, Spring Cloud Stream microservices deployed to Cloud Foundry via Spring Cloud Dataflow was used. 
   * In a Data Manufacturing Pipeline, it is feasable that a variety of data will pass through this process. It is not, however, feasable to assume that all data should go to the same destination. I paradime shift from an A to B load to a Data Microservice is needed. Namely that data purpose, data relevence, and its value to business should dictate its location. A Data Microservice platform, not unlike a standard Microservice platform, maps data to product in a way that will handle it best for the business. This also means that data product is irrelevent in the overall vision of the platform and can be changed will very little itteration. 
   * What follows is an example of such a platform.
-     ![Screenshot](Screen Shot 2016-08-26 at 11.30.28 AM.png)
+  
   * A working demo for viewing is available and deployed via Pivotal Web Services and Amazon Web Services. 
     * The Data Browser UI is available at:
        
