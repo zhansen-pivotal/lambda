@@ -10,9 +10,11 @@
        * **File** (Source) --> 
          * **URLs** which then gets bound by RabbitMq message bus and sent down the pipeline.
        * **Http-Get** (Processor) -->
-         * Gets the data via a rest api and sends it to the output channel of the message bus to be consumed by currator.
+         * Custom Code. Gets the data via a rest api and sends it to the output channel of the message bus to be consumed by currator.
        * **Currator-Processor** (Processor) -->
-         * Enriches json data based on stream definition input params. This can differ based on destination (sink)
+         * Custom Code. Enriches json data based on stream definition input params. This can differ based on destination (sink)
+       * **Formatter**
+         * Custom Code. Simple Formatter that provides readable data for HDFS.
        * **Gemfire** or **HDFS** (Sink) -->X
          * **Gemfire** (Sink)
            * Current data is cached in Gemfire to be consumed by the Demographic Data Browser UI
@@ -45,7 +47,7 @@
                https://network.pivotal.io/products/pivotal-gpdb#/releases/2146/file_groups/465 
        * Once downloaded, follow install instructions and start psql client. 
       
-                   ```$ psql```
+              ```$ psql```
 
          * We now need to create and configure an External Table to query from s3. 
           * This is made possible by creating a PROTOCOL and Function and then pointing the table to the url of the s3 bucket.
