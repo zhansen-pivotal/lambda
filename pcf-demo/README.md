@@ -41,3 +41,44 @@
   dataflow:>app register --name hdfs-formatter --type processor --uri https://github.com/zhansen-pivotal/lambda/blob/master/pcf-demo/hdfs-formatter/target/hdfs-formatter-0.0.1-SNAPSHOT.jar?raw=true --force
 
    dataflow:>app register --name http-get --type processor --uri https://github.com/zhansen-pivotal/lambda/blob/master/pcf-demo/http-extended-processor/target/http-extended-processor-0.0.1-SNAPSHOT.jar?raw=true --force
+```
+
+ * In this **Demo**, the process:
+       * **Http** (Source) --> 
+         * **URLs** which then gets bound by RabbitMq message bus and sent down the pipeline.
+       * **Http-Get** (Processor) -->
+         * Custom Code. Gets the data via a rest api and sends it to the output channel of the message bus to be consumed by currator.
+       * **Currator-Processor** (Processor) -->
+         * Custom Code. Enriches json data based on stream definition input params. This can differ based on destination (sink)
+       * **Formatter**
+         * Custom Code. Simple Formatter that provides readable data for S3.
+       * **Gemfire** or **S3** (Sink) -->X
+         * **Gemfire** (Sink)
+           * Current data is cached in Gemfire to be consumed by the Demographic Data Browser UI
+         * **S3** (Sink)
+           * Historical and Current data is stored in s3 to be consumed by Pivotal Greenplum for BI/Analytic use cases. (**note:** should be aggregated before write to s3. Not in current itteration)
+
+
+   * We can now start to deploy streams. To do so you can either use the dataflow-shell or the web-ui. 
+
+      *  For using the easy-use Spring Cloud Dataflow Dashboard go to:
+             
+             ```http://<your-dataflow-server>/dashboard ```
+             
+      *  Go to the streams tab and then stream create. 
+      *  We will need to enter our stream deffinition here. 
+   * The streams we need for this demo are:
+       
+       ```
+       demo-current=http | http-get | curration-processor --securityGroup="3" --destination="GemFire" --dataSetYear="2014" --dataSource="www.broadbandmap.gov/broadbandmap/demographic/2014/coordinates" --spring.cloud.stream.bindings.output.contentType='application/json' |s3-formatter: hdfs-formatter --spring.cloud.stream.bindings.output.contentType='application/octet-stream' > :s3-topic
+demo-gemfire=:demo-current.curration-processor > gemfire --connect-type=server --region-name=demo --host-addresses=<host>:<port> --key-expression=payload.getField('id') --json=true
+demo-2012=http | http-get | curration-processor --securityGroup="2" --destination="s3" --dataSetYear="2012" --dataSource="www.broadbandmap.gov/broadbandmap/demographic/2012/coordinates" | s3-formatter:hdfs-formatter --spring.cloud.stream.bindings.output.contentType='application/octet-stream' > :s3-topic
+demo-2010=http | http-get | curration-processor --securityGroup="1" --destination="s3" --dataSetYear="2010" --dataSource="www.broadbandmap.gov/broadbandmap/demographic/2010/coordinates" | s3-formatter:hdfs-formatter --spring.cloud.stream.bindings.output.contentType='application/octet-stream' > :s3-topic
+demo-merge=:s3-topic > s3 --bucket='<your-bucket>' --acl=PublicRead --cloud.aws.region.static='<your-region>' --cloud.aws.credentials.accessKey='<your-accesskey>' --cloud.aws.credentials.secretKey='<your-secret>' --key-expression=payload.hashCode()
+       
+       ```
+       
+       
+       * Configuration parameters will need to be set for aws credentials and bucket.
+       * An example of what the Spring Dataflow Dashboad will look like is as follows:
+          ![Screenshot] (asdf.png)
